@@ -1,0 +1,10 @@
+version: v2
+plugins:
+  - remote: buf.build/protocolbuffers/go
+    out: .
+    opt: module=github.com/nnutica/7solution-backend-challenge
+  - remote: buf.build/grpc/go
+    out: .
+    opt: module=github.com/nnutica/7solution-backend-challenge
+inputs:
+  - directory: proto
