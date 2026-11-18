@@ -56,6 +56,25 @@ go run ./cmd/api
 go test ./...
 ```
 
+Unit tests use the standard `testing` package with hand-written in-memory fakes ([internal/app/apptest](internal/app/apptest)) behind the port interfaces. No mocking library is used.
+
+| Package | What is tested |
+| --- | --- |
+| `domain` | Validation and normalisation rules |
+| `platform/token` | Issue/verify, expired token, wrong secret, `alg: none`, HS512, missing `exp`/`sub` |
+| `platform/password`, `platform/config` | bcrypt hashing, env loading and errors |
+| `app` | User and auth use cases, login timing protection, background reporter |
+| `adapter/http` | Every route and error path via `httptest`, JWT and logging middleware |
+| `adapter/grpc` | CreateUser/GetUser, error codes and auth interceptor via in-memory `bufconn` |
+| `adapter/mongo` | Integration test against a real MongoDB; **skipped unless `MONGO_URI` is set** |
+
+Run the integration test as well:
+
+```bash
+docker compose up -d mongo
+MONGO_URI=mongodb://localhost:27017 go test ./...
+```
+
 ## Authentication (JWT)
 
 1. **Register** with `POST /auth/register` (public).
